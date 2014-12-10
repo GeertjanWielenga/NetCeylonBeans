@@ -1,5 +1,6 @@
 package org.ncb.completion;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,16 +23,24 @@ import org.netbeans.modules.parsing.api.Snapshot;
 
 public class CeylonCompletionHandler implements CodeCompletionHandler {
 
+    private static final List<String> KEYWORDS = Arrays.asList("import", "assert",
+            "alias", "class", "interface", "object", "given", "value", "assign", "void", "function",
+            "assembly", "module", "package", "of", "extends", "satisfies", "abstracts", "in", "out",
+            "return", "break", "continue", "throw", "if", "else", "switch", "case", "for", "while",
+            "try", "catch", "finally", "this", "outer", "super", "is", "exists", "nonempty", "then",
+            "dynamic", "new", "let");
+
     @Override
     public CodeCompletionResult complete(CodeCompletionContext context) {
         List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
-        CeylonElementHandle element
-                        = CeylonElementHandle.with("Bla", new OffsetRange(2, 10), ElementKind.METHOD)
-                        .withModifier(Modifier.STATIC)
-                        .build();
-        proposals.add(CeylonCompletionProposal.forElement(element));
-        CodeCompletionResult result = new CeylonCodeCompletionResult(proposals);
-        return result;
+        for (String word : KEYWORDS) {
+            CeylonElementHandle element
+                    = CeylonElementHandle.with(word, new OffsetRange(2, 10), ElementKind.METHOD)
+                    .withModifier(Modifier.STATIC)
+                    .build();
+            proposals.add(CeylonCompletionProposal.forElement(element));
+        }
+        return new CeylonCodeCompletionResult(proposals);
     }
 
     @Override
